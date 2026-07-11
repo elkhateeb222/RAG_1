@@ -1,0 +1,1 @@
+## RAG stands for retreival augmentent genration
