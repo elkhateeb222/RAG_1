@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     MYSQL_USER:str
     MYSQL_PASSWORD:str
     MYSQL_HOST:str
+    MYSQL_VIDEOS_TABLE_NAME:str
+    MYSQL_FILES_TABLE_NAME:str
+    MySQL_YOUTUBE_URLS_CHUNKS_NAME:str
+
+    
+    MAX_CHUNK_NO_CHARS:int
 
 
     

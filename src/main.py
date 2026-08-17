@@ -3,13 +3,14 @@ from settings import get_settings
 from contextlib import asynccontextmanager
 from services import VideoTranscriptor
 from routes import upload_videos_router
-
+from models import DBManager
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.settings=get_settings()
     app.video_transcriptor=VideoTranscriptor()
+    app.db_manager = DBManager()
     yield
 
 settings=get_settings()

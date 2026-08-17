@@ -2,4 +2,6 @@ fastapi==0.139.0
 PyMySQL==1.2.0
 
 python-multipart==0.0.32
+langchain-text-splitters==1.1.2
+
 
