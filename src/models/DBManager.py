@@ -37,10 +37,10 @@ class DBManager:
         
     def create_db_tables_if_not_exists(self):
         self.my_cursor.execute(
-            f"CREATE TABLE IF NOT EXISTS al_ehsan.{self.settings.MYSQL_VIDEOS_TABLE_NAME}(video_id INT PRIMARY KEY AUTO_INCREMENT, video_uuid VARCHAR(36), video_url VARCHAR(60), video_content MEDIUMTEXT);"
+            f"CREATE TABLE IF NOT EXISTS {self.settings.MYSQL_DATABASE}.{self.settings.MYSQL_VIDEOS_TABLE_NAME}(video_id INT PRIMARY KEY AUTO_INCREMENT, video_uuid VARCHAR(36), video_url VARCHAR(60), video_content MEDIUMTEXT);"
         )
         self.my_cursor.execute(
-            f"CREATE TABLE IF NOT EXISTS al_ehsan.{self.settings.MYSQL_FILES_TABLE_NAME}(file_id INT PRIMARY KEY AUTO_INCREMENT, file_uuid VARCHAR(36), file_name VARCHAR(30), file_content MEDIUMTEXT);"
+            f"CREATE TABLE IF NOT EXISTS {self.settings.MYSQL_DATABASE}.{self.settings.MYSQL_FILES_TABLE_NAME}(file_id INT PRIMARY KEY AUTO_INCREMENT, file_uuid VARCHAR(36), file_name VARCHAR(30), file_content MEDIUMTEXT);"
         )
         self.my_cursor.execute(
             f"CREATE TABLE IF NOT EXISTS {self.settings.MYSQL_DATABASE}.{self.settings.MySQL_YOUTUBE_URLS_CHUNKS_NAME}(chunk_id INT PRIMARY KEY AUTO_INCREMENT ,video_url VARCHAR(60),chunk_content VARCHAR({self.settings.MAX_CHUNK_NO_CHARS}))"
@@ -57,7 +57,9 @@ class DBManager:
                 self.my_cursor.execute(
                     f"INSERT INTO {self.settings.MYSQL_DATABASE}.{table_name} (video_uuid,video_url,video_content) VALUES (%s,%s,%s)" ,[video_uuid,url,text]
             )
-                text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+                text_splitter = RecursiveCharacterTextSplitter(
+                            chunk_size = self.settings.MAX_CHUNK_NO_CHARS,
+                              chunk_overlap=1)
                 chunks = text_splitter.split_text(text)
                 for chunk in chunks:
                     self.my_cursor.execute(
@@ -65,6 +67,41 @@ class DBManager:
                     )
                 
                 self.conn.commit()
+
+
+
+
+
+
+
+    def get_ids_and_chunks_content_cols(self,table_name:str):
+        self.my_cursor.execute(
+            f"SELECT chunk_id FROM {self.settings.MYSQL_DATABASE}.{self.settings.MySQL_YOUTUBE_URLS_CHUNKS_NAME};"
+
+        )
+        ids=self.my_cursor.fetchall()
+        ids = [
+            str(i[0]) 
+            for i in ids
+            
+        ]
+
+        self.my_cursor.execute(
+            f"SELECT chunk_content FROM {self.settings.MYSQL_DATABASE}.{self.settings.MySQL_YOUTUBE_URLS_CHUNKS_NAME};"
+              
+        )
+        chunks_content=self.my_cursor.fetchall()
+        chunks_content=[
+            n[0]
+
+            for n in chunks_content
+        ]
+        
+        return ids,chunks_content
+            
+
+
+
     
 
 

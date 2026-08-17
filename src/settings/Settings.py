@@ -17,8 +17,16 @@ class Settings(BaseSettings):
     MYSQL_FILES_TABLE_NAME:str
     MySQL_YOUTUBE_URLS_CHUNKS_NAME:str
 
+
     
     MAX_CHUNK_NO_CHARS:int
+
+    VECTORDB_COLLECTION_NAME:str
+
+    LLM_PROVIDER:str
+    GLM_API_KEY:str
+    GLM_MODEL_ID:str
+    
 
 
     
